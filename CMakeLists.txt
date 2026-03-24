@@ -35,6 +35,7 @@ include_directories(WouoUI-Demo/)
 add_definitions(-w)
 
 include_directories(.)
+
 add_executable(WouoUI ${SRCS_EMULATOR})
 
 

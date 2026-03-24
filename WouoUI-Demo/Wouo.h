@@ -63,6 +63,25 @@ typedef struct MENU
     char *m_select;
 } M_SELECT;
 
+// 旋钮功能变量
+#define KNOB_PARAM 4
+#define KNOB_DISABLE 0
+#define KNOB_ROT_VOL 1
+#define KNOB_ROT_BRI 2
+
+enum
+{
+    KNOB_ROT,   // 睡眠下旋转旋钮的功能，0 禁用，1 音量，2 亮度
+    KNOB_COD,   // 睡眠下短按旋钮输入的字符码，0 禁用
+    KNOB_ROT_P, // 旋转旋钮功能在单选框中选择的位置
+    KNOB_COD_P, // 字符码在单选框中选择的位置
+};
+
+typedef struct
+{
+    uint8_t param[KNOB_PARAM];
+} knob_t;
+
 /************************************* 定义内容 *************************************/
 const uint8_t main_icon_pic[][120] = {
 {
