@@ -1,0 +1,454 @@
+
+
+
+
+/************************************* 定义页面 *************************************/
+
+// 总目录，缩进表示页面层级
+enum
+{
+    M_WINDOW,
+    M_SLEEP,
+    M_MAIN,
+    M_EDITOR,
+    M_KNOB,
+    M_KRF,
+    M_KPF,
+    M_VOLT,
+    M_SETTING,
+    M_ABOUT,
+};
+
+// 状态，初始化标签
+enum
+{
+    S_FADE,      // 转场动画
+    S_WINDOW,    // 弹窗初始化
+    S_LAYER_IN,  // 层级初始化
+    S_LAYER_OUT, // 层级初始化
+    S_NONE,      // 直接选择页面
+};
+
+// 菜单结构体
+typedef struct MENU
+{
+    char *m_select;
+} M_SELECT;
+
+/************************************* 定义内容 *************************************/
+const uint8_t main_icon_pic[][120] = {
+{
+    0xFF,0xFF,0xFF,0x3F, 0xFF,0xFF,0xFF,0x3F, 0xFF,0xFF,0xFF,0x3F, 0xFF,0xFF,0xF1,0x3F,
+    0xFF,0xFF,0xC3,0x3F, 0xFF,0xFF,0x87,0x3F, 0xFF,0xFF,0x07,0x3F, 0xFF,0xFF,0x0F,0x3E,
+    0xFF,0xFF,0x0F,0x3E, 0xFF,0xFF,0x0F,0x3C, 0xFF,0xFF,0x0F,0x3C, 0xFF,0xFF,0x0F,0x38,
+    0xFF,0xFF,0x0F,0x38, 0xFF,0xFF,0x0F,0x38, 0xFF,0xFF,0x07,0x38, 0xFF,0xFF,0x07,0x38,
+    0xFF,0xFF,0x03,0x38, 0xF7,0xFF,0x01,0x38, 0xE7,0xFF,0x00,0x3C, 0x87,0x3F,0x00,0x3C,
+    0x0F,0x00,0x00,0x3E, 0x0F,0x00,0x00,0x3E, 0x1F,0x00,0x00,0x3F, 0x3F,0x00,0x80,0x3F,
+    0x7F,0x00,0xC0,0x3F, 0xFF,0x01,0xF0,0x3F, 0xFF,0x07,0xFC,0x3F, 0xFF,0xFF,0xFF,0x3F,
+    0xFF,0xFF,0xFF,0x3F, 0xFF,0xFF,0xFF,0x3F
+},
+
+{
+    0xFF,0xFF,0xFF,0x3F, 0xFF,0xFF,0xFF,0x3F, 0xFF,0xFF,0xFF,0x3F, 0xFF,0xF9,0xE7,0x3F,
+    0xFF,0xF9,0xE7,0x3F, 0xFF,0xF9,0xE7,0x3F, 0xFF,0xF0,0xE7,0x3F, 0x7F,0xE0,0xE7,0x3F,
+    0x7F,0xE0,0xC3,0x3F, 0x7F,0xE0,0xC3,0x3F, 0x7F,0xE0,0xC3,0x3F, 0x7F,0xE0,0xE7,0x3F,
+    0xFF,0xF0,0xE7,0x3F, 0xFF,0xF9,0xE7,0x3F, 0xFF,0xF9,0xE7,0x3F, 0xFF,0xF9,0xE7,0x3F,
+    0xFF,0xF9,0xE7,0x3F, 0xFF,0xF9,0xC3,0x3F, 0xFF,0xF9,0x81,0x3F, 0xFF,0xF0,0x81,0x3F,
+    0xFF,0xF0,0x81,0x3F, 0xFF,0xF0,0x81,0x3F, 0xFF,0xF9,0x81,0x3F, 0xFF,0xF9,0xC3,0x3F,
+    0xFF,0xF9,0xE7,0x3F, 0xFF,0xF9,0xE7,0x3F, 0xFF,0xF9,0xE7,0x3F, 0xFF,0xFF,0xFF,0x3F,
+    0xFF,0xFF,0xFF,0x3F, 0xFF,0xFF,0xFF,0x3F
+},
+
+{
+    0xFF,0xFF,0xFF,0x3F, 0xFF,0xFF,0xFF,0x3F, 0xEF,0xFF,0xFF,0x3F, 0xC7,0xFF,0xFF,0x3F,
+    0xC7,0xF3,0xFF,0x3F, 0x83,0xC0,0xFF,0x3F, 0xEF,0xCC,0xFF,0x3F, 0x6F,0x9E,0xFF,0x3F,
+    0x6F,0x9E,0xFF,0x3F, 0x2F,0x3F,0xFF,0x3F, 0x2F,0x3F,0xFF,0x3F, 0x8F,0x7F,0xFE,0x3F,
+    0x8F,0x7F,0xFE,0x39, 0x8F,0x7F,0xFE,0x39, 0xCF,0xFF,0xFC,0x3C, 0xCF,0xFF,0xFC,0x3C,
+    0xEF,0xFF,0xFC,0x3C, 0xEF,0xFF,0x79,0x3E, 0xEF,0xFF,0x79,0x3E, 0xEF,0xFF,0x33,0x3F,
+    0xEF,0xFF,0x33,0x3F, 0xEF,0xFF,0x87,0x3F, 0xEF,0xFF,0xCF,0x3F, 0xEF,0xFF,0x7F,0x3E,
+    0xEF,0xFF,0x7F,0x38, 0x0F,0x00,0x00,0x30, 0xFF,0xFF,0x7F,0x38, 0xFF,0xFF,0x7F,0x3E,
+    0xFF,0xFF,0xFF,0x3F, 0xFF,0xFF,0xFF,0x3F
+},
+
+{
+    0xFF,0xFF,0xFF,0x3F, 0xFF,0xFF,0xFF,0x3F, 0xFF,0xFF,0xFF,0x3F, 0xFF,0xFF,0xFF,0x3F,
+    0xFF,0x1F,0xFE,0x3F, 0xFF,0x1F,0xFE,0x3F, 0xFF,0x0C,0xCC,0x3F, 0x7F,0x00,0x80,0x3F,
+    0x3F,0x00,0x00,0x3F, 0x3F,0xE0,0x01,0x3F, 0x7F,0xF8,0x87,0x3F, 0x7F,0xFC,0x8F,0x3F,
+    0x3F,0xFC,0x0F,0x3F, 0x0F,0x3E,0x1F,0x3C, 0x0F,0x1E,0x1E,0x3C, 0x0F,0x1E,0x1E,0x3C,
+    0x0F,0x3E,0x1F,0x3C, 0x3F,0xFC,0x0F,0x3F, 0x7F,0xFC,0x8F,0x3F, 0x7F,0xF8,0x87,0x3F,
+    0x3F,0xE0,0x01,0x3F, 0x3F,0x00,0x00,0x3F, 0x7F,0x00,0x80,0x3F, 0xFF,0x0C,0xCC,0x3F,
+    0xFF,0x1F,0xFE,0x3F, 0xFF,0x1F,0xFE,0x3F, 0xFF,0xFF,0xFF,0x3F, 0xFF,0xFF,0xFF,0x3F,
+    0xFF,0xFF,0xFF,0x3F, 0xFF,0xFF,0xFF,0x3F
+}
+};
+
+
+/************************************* 页面变量 *************************************/
+
+// OLED变量
+#define DISP_H 64  // 屏幕高度
+#define DISP_W 128 // 屏幕宽度
+uint8_t *buf_ptr;  // 指向屏幕缓冲的指针
+uint16_t buf_len;  // 缓冲长度
+
+// UI变量
+#define UI_DEPTH 20  // 最深层级数
+#define UI_MNUMB 100 // 菜单数量
+#define UI_PARAM 16  // 参数数量
+
+
+// 磁贴变量
+// 所有磁贴页面都使用同一套参数
+#define TILE_B_FONT u8g2_font_helvB18_tr // 磁贴大标题字体
+#define TILE_B_TITLE_H 18                // 磁贴大标题字体高度
+#define TILE_ICON_H 30                   // 磁贴图标高度
+#define TILE_ICON_W 30                   // 磁贴图标宽度
+#define TILE_ICON_S 36                   // 磁贴图标间距
+#define TILE_INDI_H 27                   // 磁贴大标题指示器高度
+#define TILE_INDI_W 7                    // 磁贴大标题指示器宽度
+#define TILE_INDI_S 36                   // 磁贴大标题指示器上边距
+struct
+{
+    float title_y_calc = TILE_INDI_S + (TILE_INDI_H - TILE_B_TITLE_H) / 2 + TILE_B_TITLE_H * 2;
+    float title_y_trg_calc = TILE_INDI_S + (TILE_INDI_H - TILE_B_TITLE_H) / 2 + TILE_B_TITLE_H;
+    int16_t temp;
+    bool select_flag;
+    float icon_x;
+    float icon_x_trg;
+    float icon_y;
+    float icon_y_trg;
+    float indi_x;
+    float indi_x_trg;
+    float title_y;
+    float title_y_trg;
+} tile;
+
+// 列表变量
+// 默认参数
+
+#define LIST_FONT u8g2_font_HelvetiPixel_tr // 列表字体
+#define LIST_TEXT_H 8                       // 列表每行文字字体的高度
+#define LIST_LINE_H 16                      // 列表单行高度
+#define LIST_TEXT_S 4                       // 列表每行文字的上边距，左边距和右边距，下边距由它和字体高度和行高度决定
+#define LIST_BAR_W 5                        // 列表进度条宽度，需要是奇数，因为正中间有1像素宽度的线
+#define LIST_BOX_R 0.5f                     // 列表选择框圆角
+
+/*
+//超窄行高度测试
+#define   LIST_FONT           u8g2_font_4x6_tr            //列表字体
+#define   LIST_TEXT_H         5                           //列表每行文字字体的高度
+#define   LIST_LINE_H         7                           //列表单行高度
+#define   LIST_TEXT_S         1                           //列表每行文字的上边距，左边距和右边距，下边距由它和字体高度和行高度决定
+#define   LIST_BAR_W          7                           //列表进度条宽度，需要是奇数，因为正中间有1像素宽度的线
+#define   LIST_BOX_R          0.5f                        //列表选择框圆角
+*/
+struct
+{
+    uint8_t line_n = DISP_H / LIST_LINE_H;
+    int16_t temp;
+    bool loop;
+    float y;
+    float y_trg;
+    float box_x;
+    float box_x_trg;
+    float box_y;
+    float box_y_trg[UI_DEPTH];
+    float bar_y;
+    float bar_y_trg;
+} list;
+
+// 电压测量页面变量
+// 开发板模拟引脚
+uint8_t analog_pin[10] = {PA0, PA1, PA2, PA3, PA4, PA5, PA6, PA7, PB0, PB1};
+// 曲线相关
+#define WAVE_SAMPLE 20  // 采集倍数
+#define WAVE_W 94       // 波形宽度
+#define WAVE_L 24       // 波形左边距
+#define WAVE_U 0        // 波形上边距
+#define WAVE_MAX 27     // 最大值
+#define WAVE_MIN 4      // 最小值
+#define WAVE_BOX_H 32   // 波形边框高度
+#define WAVE_BOX_W 94   // 波形边框宽度
+#define WAVE_BOX_L_S 24 // 波形边框左边距
+// 列表和文字背景框相关
+#define VOLT_FONT u8g2_font_helvB18_tr // 电压数字字体
+#define VOLT_TEXT_BG_L_S 24            // 文字背景框左边距
+#define VOLT_TEXT_BG_W 94              // 文字背景框宽度
+#define VOLT_TEXT_BG_H 29              // 文字背景框高度
+struct
+{
+    int ch0_adc[WAVE_SAMPLE * WAVE_W];
+    int ch0_wave[WAVE_W];
+    int val;
+    float text_bg_r;
+    float text_bg_r_trg;
+} volt;
+
+// 选择框变量
+
+// 默认参数
+#define CHECK_BOX_L_S 95 // 选择框在每行的左边距
+#define CHECK_BOX_U_S 2  // 选择框在每行的上边距
+#define CHECK_BOX_F_W 12 // 选择框外框宽度
+#define CHECK_BOX_F_H 12 // 选择框外框高度
+#define CHECK_BOX_D_S 2  // 选择框里面的点距离外框的边距
+
+/*
+//超窄行高度测试
+#define   CHECK_BOX_L_S       99                          //选择框在每行的左边距
+#define   CHECK_BOX_U_S       0                           //选择框在每行的上边距
+#define   CHECK_BOX_F_W       5                           //选择框外框宽度
+#define   CHECK_BOX_F_H       5                           //选择框外框高度
+#define   CHECK_BOX_D_S       1                           //选择框里面的点距离外框的边距
+*/
+struct
+{
+    uint8_t *v;
+    uint8_t *m;
+    uint8_t *s;
+    uint8_t *s_p;
+} check_box;
+
+// 弹窗变量
+#define WIN_FONT u8g2_font_HelvetiPixel_tr // 弹窗字体
+#define WIN_H 32                           // 弹窗高度
+#define WIN_W 102                          // 弹窗宽度
+#define WIN_BAR_W 92                       // 弹窗进度条宽度
+#define WIN_BAR_H 7                        // 弹窗进度条高度
+#define WIN_Y -WIN_H - 2                   // 弹窗竖直方向出场起始位置
+#define WIN_Y_TRG -WIN_H - 2               // 弹窗竖直方向退场终止位置
+typedef struct
+{
+    uint8_t *value;
+    uint8_t max;
+    uint8_t min;
+    uint8_t step;
+
+    MENU *bg;
+    uint8_t index;
+    char title[20];
+    uint8_t select;
+
+    uint8_t l;
+    uint8_t u;
+
+    float bar;
+    float bar_trg;
+    float y;
+    float y_trg;
+} ParamWindow;
+
+// 聚光灯变量
+struct
+{
+    float l;
+    float l_trg;
+    float r;
+    float r_trg;
+    float u;
+    float u_trg;
+    float d;
+    float d_trg;
+} spot;
+
+enum
+{
+    DISP_BRI,  // 屏幕亮度
+    TILE_ANI,  // 磁贴动画速度
+    LIST_ANI,  // 列表动画速度
+    WIN_ANI,   // 弹窗动画速度
+    SPOT_ANI,  // 聚光动画速度
+    TAG_ANI,   // 标签动画速度
+    FADE_ANI,  // 消失动画速度
+    BTN_SPT,   // 按键短按时长
+    BTN_LPT,   // 按键长按时长
+    TILE_UFD,  // 磁贴图标从头展开开关
+    LIST_UFD,  // 菜单列表从头展开开关
+    TILE_LOOP, // 磁贴图标循环模式开关
+    LIST_LOOP, // 菜单列表循环模式开关
+    WIN_BOK,   // 弹窗背景虚化开关
+    KNOB_DIR,  // 旋钮方向切换开关
+    DARK_MODE, // 黑暗模式开关
+};
+
+typedef struct
+{
+    bool init;
+    uint8_t num[UI_MNUMB];
+    uint8_t select[UI_DEPTH];
+    uint8_t layer;
+    uint8_t index;
+    uint8_t state;
+    bool sleep;
+    uint8_t fade;
+    uint8_t param[UI_PARAM];
+} UiContext;
+/************************************* 文字内容 *************************************/
+
+M_SELECT main_menu[]{
+    {"Sleep"},
+    {"Editor"},
+    {"Volt"},
+    {"Setting"},
+};
+
+M_SELECT editor_menu[]{
+    {"[ Editor ]"},
+    {"- Function 0"},
+    {"- Function 1"},
+    {"- Function 2"},
+    {"- Function 3"},
+    {"- Function 4"},
+    {"- Function 5"},
+    {"- Function 6"},
+    {"- Function 7"},
+    {"- Function 8"},
+    {"- Function 9"},
+    {"- Knob"},
+};
+
+M_SELECT knob_menu[]{
+    {"[ Knob ]"},
+    {"# Rotate Func"},
+    {"$ Press Func"},
+};
+
+M_SELECT krf_menu[]{
+    {"[ Rotate Function ]"},
+    {"--------------------------"},
+    {"= Disable"},
+    {"--------------------------"},
+    {"= Volume"},
+    {"= Brightness"},
+    {"--------------------------"},
+};
+
+M_SELECT kpf_menu[]{
+    {"[ Press Function ]"},
+    {"--------------------------"},
+    {"= Disable"},
+    {"--------------------------"},
+    {"= A"},
+    {"= B"},
+    {"= C"},
+    {"= D"},
+    {"= E"},
+    {"= F"},
+    {"= G"},
+    {"= H"},
+    {"= I"},
+    {"= J"},
+    {"= K"},
+    {"= L"},
+    {"= M"},
+    {"= N"},
+    {"= O"},
+    {"= P"},
+    {"= Q"},
+    {"= R"},
+    {"= S"},
+    {"= T"},
+    {"= U"},
+    {"= V"},
+    {"= W"},
+    {"= X"},
+    {"= Y"},
+    {"= Z"},
+    {"--------------------------"},
+    {"= 0"},
+    {"= 1"},
+    {"= 2"},
+    {"= 3"},
+    {"= 4"},
+    {"= 5"},
+    {"= 6"},
+    {"= 7"},
+    {"= 8"},
+    {"= 9"},
+    {"--------------------------"},
+    {"= Esc"},
+    {"= F1"},
+    {"= F2"},
+    {"= F3"},
+    {"= F4"},
+    {"= F5"},
+    {"= F6"},
+    {"= F7"},
+    {"= F8"},
+    {"= F9"},
+    {"= F10"},
+    {"= F11"},
+    {"= F12"},
+    {"--------------------------"},
+    {"= Left Ctrl"},
+    {"= Left Shift"},
+    {"= Left Alt"},
+    {"= Left Win"},
+    {"= Right Ctrl"},
+    {"= Right Shift"},
+    {"= Right Alt"},
+    {"= Right Win"},
+    {"--------------------------"},
+    {"= Caps Lock"},
+    {"= Backspace"},
+    {"= Return"},
+    {"= Insert"},
+    {"= Delete"},
+    {"= Tab"},
+    {"--------------------------"},
+    {"= Home"},
+    {"= End"},
+    {"= Page Up"},
+    {"= Page Down"},
+    {"--------------------------"},
+    {"= Up Arrow"},
+    {"= Down Arrow"},
+    {"= Left Arrow"},
+    {"= Right Arrow"},
+    {"--------------------------"},
+};
+
+M_SELECT volt_menu[]{
+    {"A0"},
+    {"A1"},
+    {"A2"},
+    {"A3"},
+    {"A4"},
+    {"A5"},
+    {"A6"},
+    {"A7"},
+    {"B0"},
+    {"B1"},
+};
+
+M_SELECT setting_menu[]{
+    {"[ Setting ]"},
+    {"~ Disp Bri"},
+    {"~ Tile Ani"},
+    {"~ List Ani"},
+    {"~ Win Ani"},
+    {"~ Spot Ani"},
+    {"~ Tag Ani"},
+    {"~ Fade Ani"},
+    {"~ Btn SPT"},
+    {"~ Btn LPT"},
+    {"+ T Ufd Fm Scr"},
+    {"+ L Ufd Fm Scr"},
+    {"+ T Loop Mode"},
+    {"+ L Loop Mode"},
+    {"+ Win Bokeh Bg"},
+    {"+ Knob Rot Dir"},
+    {"+ Dark Mode"},
+    {"- [ About ]"},
+};
+
+M_SELECT about_menu[]{
+    {"[ WouoUI ]"},
+    {"- Version: v2.3"},
+    {"- Board: STM32F103"},
+    {"- Ram: 20k"},
+    {"- Flash: 64k"},
+    {"- Freq: 72Mhz"},
+    {"- Creator: RQNG"},
+    {"- Bili UID: 9182439"},
+};
