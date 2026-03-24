@@ -19,6 +19,7 @@ file(GLOB SRCS_EMULATOR
         Libs/WouoFix.cpp
         *.c 
         *.cpp
+        src/Arduino.c
         )
 include_directories(Libs/u8g2/csrc/)
 include_directories(Libs/u8g2/cppsrc/)
@@ -27,6 +28,7 @@ include_directories(Libs/)
 include_directories(Libs/u8g2/cppsrc/)
 include_directories(Libs/u8g2/common/)
 include_directories(SDL2/include/)
+include_directories(src/)
 include_directories(.)
 add_definitions(-w)
 
