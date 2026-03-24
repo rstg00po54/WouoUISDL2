@@ -10,20 +10,22 @@ include_directories(${SDL2_INCLUDE_DIRS})
 
 
 file(GLOB SRCS_EMULATOR
-        u8g2/csrc/*.c 
-        u8g2/sys/sdl/common/*.c 
-        u8g2/cppsrc/*.cpp 
-        u8g2/common/*.c
-        Arduino/*.c 
-        Arduino/*.cpp
+        Libs/u8g2/csrc/*.c 
+        Libs/u8g2/sys/sdl/common/*.c 
+        Libs/u8g2/cppsrc/*.cpp 
+        Libs/u8g2/common/*.c
+        Libs/Arduino/*.c 
+        Libs/Arduino/*.cpp
+        Libs/WouoFix.cpp
         *.c 
         *.cpp
         )
-include_directories(u8g2/csrc/)
-include_directories(u8g2/cppsrc/)
-include_directories(Arduino/)
-include_directories(u8g2/cppsrc/)
-include_directories(u8g2/common/)
+include_directories(Libs/u8g2/csrc/)
+include_directories(Libs/u8g2/cppsrc/)
+include_directories(Libs/Arduino/)
+include_directories(Libs/)
+include_directories(Libs/u8g2/cppsrc/)
+include_directories(Libs/u8g2/common/)
 include_directories(SDL2/include/)
 include_directories(.)
 add_definitions(-w)
