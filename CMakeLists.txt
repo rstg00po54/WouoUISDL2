@@ -19,7 +19,8 @@ file(GLOB SRCS_EMULATOR
         Libs/WouoFix.cpp
         *.c 
         *.cpp
-        src/Arduino.c
+        src/Arduino.cpp
+        WouoUI-Demo/ui-128_64/*.cpp
         )
 include_directories(Libs/u8g2/csrc/)
 include_directories(Libs/u8g2/cppsrc/)

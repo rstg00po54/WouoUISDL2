@@ -1,3 +1,8 @@
+#ifndef WOUOFIX_H
+#define WOUOFIX_H
+
+#include "Arduino/ArduinoCompatible.h"
+
 #define KEY_ESC 0
 #define KEY_F1 0
 #define KEY_F2 0
@@ -62,3 +67,4 @@
 void ui_param_init();
 
 
+#endif

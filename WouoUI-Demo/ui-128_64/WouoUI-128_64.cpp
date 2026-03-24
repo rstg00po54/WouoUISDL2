@@ -56,6 +56,9 @@
 #include <monitor.h>
 
 #include "../Wouo.h"
+#include "WouoUI_init.h"
+#include "WouoUI_proc.h"
+#include "WouoUI-128_64.h"
 
 #define SCL PB6
 #define SDA PB7
@@ -72,6 +75,180 @@ UiContext ui = {
 };
 ParamWindow win;
 
+/************************************* 文字内容 *************************************/
+
+M_SELECT main_menu[]{
+    {"Sleep"},
+    {"Editor"},
+    {"Volt"},
+    {"Setting"},
+};
+
+M_SELECT editor_menu[]{
+    {"[ Editor ]"},
+    {"- Function 0"},
+    {"- Function 1"},
+    {"- Function 2"},
+    {"- Function 3"},
+    {"- Function 4"},
+    {"- Function 5"},
+    {"- Function 6"},
+    {"- Function 7"},
+    {"- Function 8"},
+    {"- Function 9"},
+    {"- Knob"},
+};
+
+M_SELECT knob_menu[]{
+    {"[ Knob ]"},
+    {"# Rotate Func"},
+    {"$ Press Func"},
+};
+
+M_SELECT krf_menu[]{
+    {"[ Rotate Function ]"},
+    {"--------------------------"},
+    {"= Disable"},
+    {"--------------------------"},
+    {"= Volume"},
+    {"= Brightness"},
+    {"--------------------------"},
+};
+
+M_SELECT kpf_menu[]{
+    {"[ Press Function ]"},
+    {"--------------------------"},
+    {"= Disable"},
+    {"--------------------------"},
+    {"= A"},
+    {"= B"},
+    {"= C"},
+    {"= D"},
+    {"= E"},
+    {"= F"},
+    {"= G"},
+    {"= H"},
+    {"= I"},
+    {"= J"},
+    {"= K"},
+    {"= L"},
+    {"= M"},
+    {"= N"},
+    {"= O"},
+    {"= P"},
+    {"= Q"},
+    {"= R"},
+    {"= S"},
+    {"= T"},
+    {"= U"},
+    {"= V"},
+    {"= W"},
+    {"= X"},
+    {"= Y"},
+    {"= Z"},
+    {"--------------------------"},
+    {"= 0"},
+    {"= 1"},
+    {"= 2"},
+    {"= 3"},
+    {"= 4"},
+    {"= 5"},
+    {"= 6"},
+    {"= 7"},
+    {"= 8"},
+    {"= 9"},
+    {"--------------------------"},
+    {"= Esc"},
+    {"= F1"},
+    {"= F2"},
+    {"= F3"},
+    {"= F4"},
+    {"= F5"},
+    {"= F6"},
+    {"= F7"},
+    {"= F8"},
+    {"= F9"},
+    {"= F10"},
+    {"= F11"},
+    {"= F12"},
+    {"--------------------------"},
+    {"= Left Ctrl"},
+    {"= Left Shift"},
+    {"= Left Alt"},
+    {"= Left Win"},
+    {"= Right Ctrl"},
+    {"= Right Shift"},
+    {"= Right Alt"},
+    {"= Right Win"},
+    {"--------------------------"},
+    {"= Caps Lock"},
+    {"= Backspace"},
+    {"= Return"},
+    {"= Insert"},
+    {"= Delete"},
+    {"= Tab"},
+    {"--------------------------"},
+    {"= Home"},
+    {"= End"},
+    {"= Page Up"},
+    {"= Page Down"},
+    {"--------------------------"},
+    {"= Up Arrow"},
+    {"= Down Arrow"},
+    {"= Left Arrow"},
+    {"= Right Arrow"},
+    {"--------------------------"},
+};
+
+M_SELECT volt_menu[]{
+    {"A0"},
+    {"A1"},
+    {"A2"},
+    {"A3"},
+    {"A4"},
+    {"A5"},
+    {"A6"},
+    {"A7"},
+    {"B0"},
+    {"B1"},
+};
+
+M_SELECT setting_menu[]{
+    {"[ Setting ]"},
+    {"~ Disp Bri"},
+    {"~ Tile Ani"},
+    {"~ List Ani"},
+    {"~ Win Ani"},
+    {"~ Spot Ani"},
+    {"~ Tag Ani"},
+    {"~ Fade Ani"},
+    {"~ Btn SPT"},
+    {"~ Btn LPT"},
+    {"+ T Ufd Fm Scr"},
+    {"+ L Ufd Fm Scr"},
+    {"+ T Loop Mode"},
+    {"+ L Loop Mode"},
+    {"+ Win Bokeh Bg"},
+    {"+ Knob Rot Dir"},
+    {"+ Dark Mode"},
+    {"- [ About ]"},
+};
+
+M_SELECT about_menu[]{
+    {"[ WouoUI ]"},
+    {"- Version: v2.3"},
+    {"- Board: STM32F103"},
+    {"- Ram: 20k"},
+    {"- Flash: 64k"},
+    {"- Freq: 72Mhz"},
+    {"- Creator: RQNG"},
+    {"- Bili UID: 9182439"},
+};
+
+uint8_t *buf_ptr;  // 指向屏幕缓冲的指针
+uint16_t buf_len;  // 缓冲长度
+// 开发板模拟引脚
+uint8_t analog_pin[10] = {PA0, PA1, PA2, PA3, PA4, PA5, PA6, PA7, PB0, PB1};
 /************************************* USB 相关 *************************************/
 
 #include <USBComposite.h>
@@ -170,27 +347,13 @@ void eeprom_init()
 #define BIO PB13
 #define SW PB14
 
-// 按键ID
-#define BTN_ID_CC 0 // 逆时针旋转
-#define BTN_ID_CW 1 // 顺时针旋转
-#define BTN_ID_SP 2 // 短按
-#define BTN_ID_LP 3 // 长按
+
 
 // 按键变量
 #define BTN_PARAM_TIMES 2 // 由于uint8_t最大值可能不够，但它存储起来方便，这里放大两倍使用
-struct
-{
-    uint8_t id;
-    bool flag;
-    bool pressed;
-    bool CW_1;
-    bool CW_2;
-    bool val;
-    bool val_last;
-    bool alv;
-    bool blv;
-    long count;
-} volatile btn;
+
+
+InputContext btn;
 
 void knob_inter()
 {
@@ -306,26 +469,7 @@ void window_value_init(char title[], uint8_t select, uint8_t *value, uint8_t max
 
 /*********************************** UI 初始化函数 *********************************/
 
-// 在初始化EEPROM时，选择性初始化的默认设置
-void ui_param_init()
-{
-    ui.param[DISP_BRI] = 255; // 屏幕亮度
-    ui.param[TILE_ANI] = 30;  // 磁贴动画速度
-    ui.param[LIST_ANI] = 60;  // 列表动画速度
-    ui.param[WIN_ANI] = 25;   // 弹窗动画速度
-    ui.param[SPOT_ANI] = 50;  // 聚光动画速度
-    ui.param[TAG_ANI] = 60;   // 标签动画速度
-    ui.param[FADE_ANI] = 30;  // 消失动画速度
-    ui.param[BTN_SPT] = 25;   // 按键短按时长
-    ui.param[BTN_LPT] = 150;  // 按键长按时长
-    ui.param[TILE_UFD] = 1;   // 磁贴图标从头展开开关
-    ui.param[LIST_UFD] = 1;   // 菜单列表从头展开开关
-    ui.param[TILE_LOOP] = 0;  // 磁贴图标循环模式开关
-    ui.param[LIST_LOOP] = 0;  // 菜单列表循环模式开关
-    ui.param[WIN_BOK] = 0;    // 弹窗背景虚化开关
-    ui.param[KNOB_DIR] = 0;   // 旋钮方向切换开关
-    ui.param[DARK_MODE] = 1;  // 黑暗模式开关
-}
+
 
 // 列表类页面列表行数初始化，必须初始化的参数
 void ui_init()
@@ -1066,48 +1210,6 @@ void sleep_proc()
     }
 }
 
-// 主菜单处理函数，磁贴类模板
-void main_proc()
-{
-    tile_show(main_menu, main_icon_pic);
-    if (btn.pressed)
-    {
-        btn.pressed = false;
-        switch (btn.id)
-        {
-        case BTN_ID_CW:
-        case BTN_ID_CC:
-            tile_rotate_switch();
-            break;
-        case BTN_ID_SP:
-            switch (ui.select[ui.layer])
-            {
-
-            case 0:
-                ui.index = M_SLEEP;
-                ui.state = S_LAYER_OUT;
-                break;
-            case 1:
-                ui.index = M_EDITOR;
-                ui.state = S_LAYER_IN;
-                break;
-            case 2:
-                ui.index = M_VOLT;
-                ui.state = S_LAYER_IN;
-                break;
-            case 3:
-                ui.index = M_SETTING;
-                ui.state = S_LAYER_IN;
-                break;
-            }
-        }
-        if (!tile.select_flag && ui.init)
-        {
-            tile.indi_x = 0;
-            tile.title_y = tile.title_y_calc;
-        }
-    }
-}
 
 // 编辑器菜单处理函数
 void editor_proc()

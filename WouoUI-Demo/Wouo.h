@@ -1,7 +1,10 @@
 
-
-
-
+#ifndef WOUO_H
+#define WOUO_H
+#include "WouoFix.h"
+typedef unsigned char uint8_t;
+typedef unsigned short uint16_t;
+typedef signed short int16_t;
 /************************************* 定义页面 *************************************/
 
 // 总目录，缩进表示页面层级
@@ -28,6 +31,20 @@ enum
     S_LAYER_OUT, // 层级初始化
     S_NONE,      // 直接选择页面
 };
+
+typedef struct
+{
+    uint8_t id;
+    bool flag;
+    bool pressed;
+    bool CW_1;
+    bool CW_2;
+    bool val;
+    bool val_last;
+    bool alv;
+    bool blv;
+    long count;
+} InputContext;
 
 // 菜单结构体
 typedef struct MENU
@@ -88,8 +105,7 @@ const uint8_t main_icon_pic[][120] = {
 // OLED变量
 #define DISP_H 64  // 屏幕高度
 #define DISP_W 128 // 屏幕宽度
-uint8_t *buf_ptr;  // 指向屏幕缓冲的指针
-uint16_t buf_len;  // 缓冲长度
+
 
 // UI变量
 #define UI_DEPTH 20  // 最深层级数
@@ -158,8 +174,7 @@ struct
 } list;
 
 // 电压测量页面变量
-// 开发板模拟引脚
-uint8_t analog_pin[10] = {PA0, PA1, PA2, PA3, PA4, PA5, PA6, PA7, PB0, PB1};
+
 // 曲线相关
 #define WAVE_SAMPLE 20  // 采集倍数
 #define WAVE_W 94       // 波形宽度
@@ -283,172 +298,6 @@ typedef struct
     uint8_t fade;
     uint8_t param[UI_PARAM];
 } UiContext;
-/************************************* 文字内容 *************************************/
 
-M_SELECT main_menu[]{
-    {"Sleep"},
-    {"Editor"},
-    {"Volt"},
-    {"Setting"},
-};
 
-M_SELECT editor_menu[]{
-    {"[ Editor ]"},
-    {"- Function 0"},
-    {"- Function 1"},
-    {"- Function 2"},
-    {"- Function 3"},
-    {"- Function 4"},
-    {"- Function 5"},
-    {"- Function 6"},
-    {"- Function 7"},
-    {"- Function 8"},
-    {"- Function 9"},
-    {"- Knob"},
-};
-
-M_SELECT knob_menu[]{
-    {"[ Knob ]"},
-    {"# Rotate Func"},
-    {"$ Press Func"},
-};
-
-M_SELECT krf_menu[]{
-    {"[ Rotate Function ]"},
-    {"--------------------------"},
-    {"= Disable"},
-    {"--------------------------"},
-    {"= Volume"},
-    {"= Brightness"},
-    {"--------------------------"},
-};
-
-M_SELECT kpf_menu[]{
-    {"[ Press Function ]"},
-    {"--------------------------"},
-    {"= Disable"},
-    {"--------------------------"},
-    {"= A"},
-    {"= B"},
-    {"= C"},
-    {"= D"},
-    {"= E"},
-    {"= F"},
-    {"= G"},
-    {"= H"},
-    {"= I"},
-    {"= J"},
-    {"= K"},
-    {"= L"},
-    {"= M"},
-    {"= N"},
-    {"= O"},
-    {"= P"},
-    {"= Q"},
-    {"= R"},
-    {"= S"},
-    {"= T"},
-    {"= U"},
-    {"= V"},
-    {"= W"},
-    {"= X"},
-    {"= Y"},
-    {"= Z"},
-    {"--------------------------"},
-    {"= 0"},
-    {"= 1"},
-    {"= 2"},
-    {"= 3"},
-    {"= 4"},
-    {"= 5"},
-    {"= 6"},
-    {"= 7"},
-    {"= 8"},
-    {"= 9"},
-    {"--------------------------"},
-    {"= Esc"},
-    {"= F1"},
-    {"= F2"},
-    {"= F3"},
-    {"= F4"},
-    {"= F5"},
-    {"= F6"},
-    {"= F7"},
-    {"= F8"},
-    {"= F9"},
-    {"= F10"},
-    {"= F11"},
-    {"= F12"},
-    {"--------------------------"},
-    {"= Left Ctrl"},
-    {"= Left Shift"},
-    {"= Left Alt"},
-    {"= Left Win"},
-    {"= Right Ctrl"},
-    {"= Right Shift"},
-    {"= Right Alt"},
-    {"= Right Win"},
-    {"--------------------------"},
-    {"= Caps Lock"},
-    {"= Backspace"},
-    {"= Return"},
-    {"= Insert"},
-    {"= Delete"},
-    {"= Tab"},
-    {"--------------------------"},
-    {"= Home"},
-    {"= End"},
-    {"= Page Up"},
-    {"= Page Down"},
-    {"--------------------------"},
-    {"= Up Arrow"},
-    {"= Down Arrow"},
-    {"= Left Arrow"},
-    {"= Right Arrow"},
-    {"--------------------------"},
-};
-
-M_SELECT volt_menu[]{
-    {"A0"},
-    {"A1"},
-    {"A2"},
-    {"A3"},
-    {"A4"},
-    {"A5"},
-    {"A6"},
-    {"A7"},
-    {"B0"},
-    {"B1"},
-};
-
-M_SELECT setting_menu[]{
-    {"[ Setting ]"},
-    {"~ Disp Bri"},
-    {"~ Tile Ani"},
-    {"~ List Ani"},
-    {"~ Win Ani"},
-    {"~ Spot Ani"},
-    {"~ Tag Ani"},
-    {"~ Fade Ani"},
-    {"~ Btn SPT"},
-    {"~ Btn LPT"},
-    {"+ T Ufd Fm Scr"},
-    {"+ L Ufd Fm Scr"},
-    {"+ T Loop Mode"},
-    {"+ L Loop Mode"},
-    {"+ Win Bokeh Bg"},
-    {"+ Knob Rot Dir"},
-    {"+ Dark Mode"},
-    {"- [ About ]"},
-};
-
-M_SELECT about_menu[]{
-    {"[ WouoUI ]"},
-    {"- Version: v2.3"},
-    {"- Board: STM32F103"},
-    {"- Ram: 20k"},
-    {"- Flash: 64k"},
-    {"- Freq: 72Mhz"},
-    {"- Creator: RQNG"},
-    {"- Bili UID: 9182439"},
-};
+#endif
