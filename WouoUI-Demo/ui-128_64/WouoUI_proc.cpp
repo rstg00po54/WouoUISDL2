@@ -5,7 +5,8 @@
 extern M_SELECT main_menu[];
 extern InputContext btn;
 extern UiContext ui;
-
+extern ParamWindow win;
+extern eeprom_t eeprom;
 // 主菜单处理函数，磁贴类模板
 void main_proc()
 {
@@ -48,3 +49,33 @@ void main_proc()
         }
     }
 }
+
+
+// // 弹窗通用处理函数
+// void window_proc()
+// {
+//     window_show();
+//     if (win.y == WIN_Y_TRG)
+//         ui.index = win.index;
+//     if (btn.pressed && win.y == win.y_trg && win.y != WIN_Y_TRG)
+//     {
+//         btn.pressed = false;
+//         switch (btn.id)
+//         {
+//         case BTN_ID_CW:
+//             if (*win.value < win.max)
+//                 *win.value += win.step;
+//             eeprom.change = true;
+//             break;
+//         case BTN_ID_CC:
+//             if (*win.value > win.min)
+//                 *win.value -= win.step;
+//             eeprom.change = true;
+//             break;
+//         case BTN_ID_SP:
+//         case BTN_ID_LP:
+//             win.y_trg = WIN_Y_TRG;
+//             break;
+//         }
+//     }
+// }

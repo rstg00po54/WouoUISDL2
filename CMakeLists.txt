@@ -31,6 +31,7 @@ include_directories(Libs/u8g2/common/)
 include_directories(SDL2/include/)
 include_directories(src/)
 include_directories(.)
+include_directories(WouoUI-Demo/)
 add_definitions(-w)
 
 include_directories(.)

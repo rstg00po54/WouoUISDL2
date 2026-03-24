@@ -8,6 +8,7 @@
 #define BTN_ID_LP 3 // 长按
 void setup();
 void loop();
+void window_show();
 void tile_show(struct MENU arr_1[], const uint8_t icon_pic[][120]);
 void tile_rotate_switch();
 

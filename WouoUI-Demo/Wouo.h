@@ -46,6 +46,17 @@ typedef struct
     long count;
 } InputContext;
 
+// EEPROM变量
+#define EEPROM_CHECK 11
+typedef struct
+{
+    bool init;
+    bool change;
+    int address;
+    uint8_t check;
+    uint8_t check_param[EEPROM_CHECK];
+} eeprom_t;
+
 // 菜单结构体
 typedef struct MENU
 {

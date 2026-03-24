@@ -1,0 +1,178 @@
+#include "WouoUI_menu_data.h"
+
+M_SELECT main_menu[] = {
+    {"Sleep"},
+    {"Editor"},
+    {"Volt"},
+    {"Setting"},
+};
+
+M_SELECT editor_menu[] = {
+    {"[ Editor ]"},
+    {"- Function 0"},
+    {"- Function 1"},
+    {"- Function 2"},
+    {"- Function 3"},
+    {"- Function 4"},
+    {"- Function 5"},
+    {"- Function 6"},
+    {"- Function 7"},
+    {"- Function 8"},
+    {"- Function 9"},
+    {"- Knob"},
+};
+
+M_SELECT knob_menu[] = {
+    {"[ Knob ]"},
+    {"# Rotate Func"},
+    {"$ Press Func"},
+};
+
+M_SELECT krf_menu[] = {
+    {"[ Rotate Function ]"},
+    {"--------------------------"},
+    {"= Disable"},
+    {"--------------------------"},
+    {"= Volume"},
+    {"= Brightness"},
+    {"--------------------------"},
+};
+
+M_SELECT kpf_menu[] = {
+    {"[ Press Function ]"},
+    {"--------------------------"},
+    {"= Disable"},
+    {"--------------------------"},
+    {"= A"},
+    {"= B"},
+    {"= C"},
+    {"= D"},
+    {"= E"},
+    {"= F"},
+    {"= G"},
+    {"= H"},
+    {"= I"},
+    {"= J"},
+    {"= K"},
+    {"= L"},
+    {"= M"},
+    {"= N"},
+    {"= O"},
+    {"= P"},
+    {"= Q"},
+    {"= R"},
+    {"= S"},
+    {"= T"},
+    {"= U"},
+    {"= V"},
+    {"= W"},
+    {"= X"},
+    {"= Y"},
+    {"= Z"},
+    {"--------------------------"},
+    {"= 0"},
+    {"= 1"},
+    {"= 2"},
+    {"= 3"},
+    {"= 4"},
+    {"= 5"},
+    {"= 6"},
+    {"= 7"},
+    {"= 8"},
+    {"= 9"},
+    {"--------------------------"},
+    {"= Esc"},
+    {"= F1"},
+    {"= F2"},
+    {"= F3"},
+    {"= F4"},
+    {"= F5"},
+    {"= F6"},
+    {"= F7"},
+    {"= F8"},
+    {"= F9"},
+    {"= F10"},
+    {"= F11"},
+    {"= F12"},
+    {"--------------------------"},
+    {"= Left Ctrl"},
+    {"= Left Shift"},
+    {"= Left Alt"},
+    {"= Left Win"},
+    {"= Right Ctrl"},
+    {"= Right Shift"},
+    {"= Right Alt"},
+    {"= Right Win"},
+    {"--------------------------"},
+    {"= Caps Lock"},
+    {"= Backspace"},
+    {"= Return"},
+    {"= Insert"},
+    {"= Delete"},
+    {"= Tab"},
+    {"--------------------------"},
+    {"= Home"},
+    {"= End"},
+    {"= Page Up"},
+    {"= Page Down"},
+    {"--------------------------"},
+    {"= Up Arrow"},
+    {"= Down Arrow"},
+    {"= Left Arrow"},
+    {"= Right Arrow"},
+    {"--------------------------"},
+};
+
+M_SELECT volt_menu[] = {
+    {"A0"},
+    {"A1"},
+    {"A2"},
+    {"A3"},
+    {"A4"},
+    {"A5"},
+    {"A6"},
+    {"A7"},
+    {"B0"},
+    {"B1"},
+};
+
+M_SELECT setting_menu[] = {
+    {"[ Setting ]"},
+    {"~ Disp Bri"},
+    {"~ Tile Ani"},
+    {"~ List Ani"},
+    {"~ Win Ani"},
+    {"~ Spot Ani"},
+    {"~ Tag Ani"},
+    {"~ Fade Ani"},
+    {"~ Btn SPT"},
+    {"~ Btn LPT"},
+    {"+ T Ufd Fm Scr"},
+    {"+ L Ufd Fm Scr"},
+    {"+ T Loop Mode"},
+    {"+ L Loop Mode"},
+    {"+ Win Bokeh Bg"},
+    {"+ Knob Rot Dir"},
+    {"+ Dark Mode"},
+    {"- [ About ]"},
+};
+
+M_SELECT about_menu[] = {
+    {"[ WouoUI ]"},
+    {"- Version: v2.3"},
+    {"- Board: STM32F103"},
+    {"- Ram: 20k"},
+    {"- Flash: 64k"},
+    {"- Freq: 72Mhz"},
+    {"- Creator: RQNG"},
+    {"- Bili UID: 9182439"},
+};
+
+uint8_t main_menu_size    = sizeof(main_menu) / sizeof(main_menu[0]);
+uint8_t editor_menu_size  = sizeof(editor_menu) / sizeof(editor_menu[0]);
+uint8_t knob_menu_size    = sizeof(knob_menu) / sizeof(knob_menu[0]);
+uint8_t krf_menu_size     = sizeof(krf_menu) / sizeof(krf_menu[0]);
+uint8_t kpf_menu_size     = sizeof(kpf_menu) / sizeof(kpf_menu[0]);
+uint8_t volt_menu_size    = sizeof(volt_menu) / sizeof(volt_menu[0]);
+uint8_t setting_menu_size = sizeof(setting_menu) / sizeof(setting_menu[0]);
+uint8_t about_menu_size   = sizeof(about_menu) / sizeof(about_menu[0]);

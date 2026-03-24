@@ -1,6 +1,5 @@
 #include <unordered_map>
 #include <SDL_events.h>
-#include "Arduino.h"
 #include "WouoFix.h"
 
 

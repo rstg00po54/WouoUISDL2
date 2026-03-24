@@ -3,5 +3,5 @@
 
 void main_proc();
 
-
+// void window_proc();
 #endif /* WOUOUI_PROC_H */
