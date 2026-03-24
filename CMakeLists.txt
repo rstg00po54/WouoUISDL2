@@ -5,6 +5,8 @@ set(CMAKE_C_COMPILER "cc")
 set(CMAKE_CXX_COMPILER "c++")
 set(CMAKE_NO_SYSTEM_FROM_IMPORTED YES)
 
+add_compile_options(-Wredundant-decls)
+
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 

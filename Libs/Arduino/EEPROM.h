@@ -1,4 +1,6 @@
-class EEPROM {
+#ifndef __EEPROM__H__
+#define __EEPROM__H__
+class EEPROM_ {
 public:
     void write(int address, int data) {
 
@@ -8,4 +10,5 @@ public:
         return 0;
     }
 
-} EEPROM;
+};
+#endif
